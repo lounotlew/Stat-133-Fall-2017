@@ -1,0 +1,23 @@
+---
+title: "Warmup-01 for Stat 133"
+subtitle: "Stat 133, Fall 2017"
+author: "Woo Sik (Lewis) Kim"
+output: github_document
+---
+
+```{r}
+# _Recipe_: Pad Thai Sauce
+# Inredients: [Peanut Butter, Olive Oil, Fish Sauce, Stevia Packet]
+# Ratio: 1:1:1:2
+
+# Steps
+# 1. Mix the ingredients together.
+# 2. Stir.
+```
+
+```{r}
+# _Quadratic Equation_
+
+# ax^2 + bx + c
+
+```
