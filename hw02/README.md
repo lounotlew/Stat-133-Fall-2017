@@ -2,7 +2,7 @@
 
 The purpose of this assignment is to start working with data frames, and developing developing manipulation skills of basic data objects in R: reading data tables,
 understanding data frames, use of bracket notation, the dollar operator, and become more
-and more familiar with the associated NBA data set which now includes more variables
+and more familiar with the associated NBA data set which now includes more variables.
 
 Modify the content of this file.
 
