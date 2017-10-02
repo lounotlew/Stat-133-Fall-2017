@@ -2,9 +2,9 @@ HW02: Basics of Data Frames
 ================
 Woo Sik (Lewis) Kim
 
-Importing the data set in different ways; first, using "read.csv()", then "read\_csv()":
+**Importing the data set in different ways; first, using "read.csv()", then "read\_csv()":**
 
-Using "read.csv()", and displaying the resulting data frame:
+• Using "read.csv()", and displaying the resulting data frame:
 
 ``` r
 dataset1 <- read.csv(file = "data/nba2017-player-statistics.csv",
@@ -48,7 +48,7 @@ str(dataset1)
     ##  $ BLK         : int  87 62 11 0 7 13 23 2 18 17 ...
     ##  $ TO          : int  116 77 88 0 25 210 79 4 68 39 ...
 
-Using "read\_csv()", and displaying the resulting data frame (I will be using the data set from read\_csv() for the remainder of the homework):
+• Using "read\_csv()", and displaying the resulting data frame (I will be using the data set from read\_csv() for the remainder of the homework):
 
 ``` r
 require(readr)
@@ -187,14 +187,14 @@ str(dataset2)
     ##   .. ..- attr(*, "class")= chr  "collector_guess" "collector"
     ##   ..- attr(*, "class")= chr "col_spec"
 
-Changing all instances of "R" (character) to "0" (integer) in the column "Experience":
+**Changing all instances of "R" (character) to "0" (integer) in the column "Experience":**
 
 ``` r
 dataset2[dataset2$Experience == "R", "Experience"] <- 0
 dataset2$Experience <- as.integer(dataset2$Experience)
 ```
 
-Computing and adding new columns to dataset2 to calculate EFF:
+**Computing and adding new columns to dataset2 to calculate EFF:**
 
 ``` r
 Missed_FG <- dataset2$FGA - dataset2$FGM
@@ -211,20 +211,12 @@ EFF <- (dataset2$PTS + dataset2$REB + dataset2$AST + dataset2$STL +
 
 dataset2 <- cbind(dataset2, EFF)
 
-Efficiency <- dataset2$EFF
-summary(Efficiency)
-```
-
-    ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-    ##  -0.600   5.452   9.090  10.137  13.247  33.840
-
-``` r
-hist(Efficiency)
+hist(dataset2$EFF)
 ```
 
 ![](hw02-WooSik_Lewis_-Kim_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-4-1.png)
 
-Processing the EFF data to get the top 10 players, and their associated name, team, salary, and EFF values:
+**Processing the EFF data to get the top 10 players, and their associated name, team, salary, and EFF values:**
 
 ``` r
 desc_eff <- select(dataset2, Player, Team, Salary, EFF)
@@ -243,66 +235,116 @@ head(arrange(desc_eff, desc(dataset2$EFF)), 10)
     ## 9           Jimmy Butler  CHI 17552209 25.60526
     ## 10      Hassan Whiteside  MIA 22116750 25.36364
 
-Obtaining player(s) with a negative EFF value:
+**Obtaining player(s) with negative EFF value(s):**
 
 ``` r
-neg_eff <- select(dataset2, Player, EFF)
+neg_eff <- filter(select(dataset2, Player, EFF), dataset2$EFF < 0)
+str(neg_eff)
 ```
 
-> top 10 players in descending EFF order: Player(s) with a negative EFF value:
+    ## 'data.frame':    1 obs. of  2 variables:
+    ##  $ Player: chr "Patricio Garino"
+    ##  $ EFF   : num -0.6
 
-Calculating the correlation coefficients between EFF and all the variables used in the EFF formula (in order of ):
+• Top 10 players in descending EFF order: "Russell Westbrook," "James Harden," "Anthony Davis," "LeBron James," "Karl-Anthony Towns," "Kevin Durant," "Giannis Antetokounmpo," "DeMarcur Cousins," "Jimmmy Butler," "Hassan Whiteside."
+
+• Player(s) with a negative EFF value: "Patricio Garino: -0.6"
+
+**Calculating the correlation coefficients between EFF and all the variables used in the EFF formula (in order of PTS, REB, STL, AST, BLK, Missed\_FT, Missed\_FG, TO, GP), and adding them to the vector "corr\_coeff":**
 
 ``` r
-cor(dataset2$EFF, dataset2$PTS)
+corr_coeff <- c(cor(dataset2$EFF, dataset2$PTS), 
+                cor(dataset2$EFF,dataset2$REB),
+                cor(dataset2$EFF, dataset2$STL), 
+                cor(dataset2$EFF, dataset2$AST),
+                cor(dataset2$EFF, dataset2$BLK),
+                -1*cor(dataset2$EFF, dataset2$Missed_FT),
+                -1*cor(dataset2$EFF, dataset2$Missed_FG),
+                -1*cor(dataset2$EFF, dataset2$TO))
+sort(corr_coeff, decreasing = TRUE)
 ```
 
-    ## [1] 0.8588644
+    ## [1]  0.8588644  0.7634501  0.6957286  0.6689232  0.5679571 -0.7271456
+    ## [7] -0.7722477 -0.8003289
+
+**Creating a barchart with the correlations:**
 
 ``` r
-cor(dataset2$EFF, dataset2$REB)
+barplot(corr_coeff, main = "name", space = c(0, 1), beside=TRUE,
+        ylim = c(-1, 1), names = c("PTS", "REB", "STL", "AST", "BLK",
+                                   "Missed_FT", "Missed_FG", "TO"))
 ```
 
-    ## [1] 0.7634501
+![](hw02-WooSik_Lewis_-Kim_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-8-1.png)
+
+**Creating a scatterplot of "Efficiency" vs. "Salary" using the entire NBA data set (dataset2):**
 
 ``` r
-cor(dataset2$EFF, dataset2$AST)
+plot(dataset2$EFF, dataset2$Salary, xlab = "Efficiency", ylab = "Salary")
+lines(lowess(dataset2$EFF, dataset2$Salary), col = "blue")
 ```
 
-    ## [1] 0.6689232
+![](hw02-WooSik_Lewis_-Kim_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-9-1.png)
+
+Also, compute the linear correlation coefficient between them. What can you say about the relationship between these two variables?
+
+**Computing the linear correlation coefficient between "Efficiency" and "Salary" for ALL players:**
 
 ``` r
-cor(dataset2$EFF, dataset2$STL)
+cor(dataset2$EFF, dataset2$Salary)
 ```
 
-    ## [1] 0.6957286
+    ## [1] 0.655624
+
+• The relationship between efficiency and salary for all players seem to be .
+
+**Selecting players who have MPG values of more than 20, and creating data frame "players2":**
 
 ``` r
-cor(dataset2$EFF, dataset2$BLK)
+players2 <- select(filter(dataset2, dataset2$MPG > 20), Player, Salary, EFF)
+str(players2)
 ```
 
-    ## [1] 0.5679571
+    ## 'data.frame':    231 obs. of  3 variables:
+    ##  $ Player: chr  "Al Horford" "Amir Johnson" "Avery Bradley" "Isaiah Thomas" ...
+    ##  $ Salary: num  26540100 12000000 8269663 6587132 6286408 ...
+    ##  $ EFF   : num  19.5 10.9 16.3 24.7 16.1 ...
+
+**Creating a scatterplot between "Efficiency" and "Salary" using the data frame "players2" (players whose MPG values &gt;20):**
 
 ``` r
-cor(dataset2$EFF, dataset2$Missed_FG)
+plot(players2$EFF, players2$Salary, xlab = "Efficiency", ylab = "Salary")
+lines(lowess(players2$EFF, players2$Salary), col = "blue")
 ```
 
-    ## [1] 0.7722477
+![](hw02-WooSik_Lewis_-Kim_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-12-1.png)
+
+**Computing the linear correlation coefficient between "Efficiency" and "Salary" for players whose MPG values &gt; 20:**
 
 ``` r
-cor(dataset2$EFF, dataset2$Missed_FT)
+cor(players2$EFF, players2$Salary)
 ```
 
-    ## [1] 0.7271456
+    ## [1] 0.5367224
 
-``` r
-cor(dataset2$EFF, dataset2$TO)
-```
+What can you say about the relationship between these two variables for the set of “more established players”?
 
-    ## [1] 0.8003289
+• The relationship between efficiency and salary for "more established players" seem to be
 
-``` r
-cor(dataset2$EFF, dataset2$GP)
-```
+**Comments and Reflections (Answered in Order)**
 
-    ## [1] 0.4773648
+• The hardest part of this class so far has been getting used to R's syntax, and the different style of programming it entails compared to things like Python and Java.
+
+• Combining functions such as filter() and select(), and using "new" functions such as sort() from online documentations was easy.
+
+• Yes, I needed help from office hours with debugging and properly creating charts/graphs.
+
+• This homework took about 3 hours to complete (spread out over multiple days).
+
+• The most time consuming part was properly importing the .csv data set.
+
+• No, I think I understood everything fully once I learned how to do it.
+
+• Yes, some syntactical errors caused frustration.
+
+• No, not necessarily for this homework. Although, organizing "unorganized" NBA data and visualizing them was pretty great.
