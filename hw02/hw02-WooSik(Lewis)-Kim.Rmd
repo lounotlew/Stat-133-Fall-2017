@@ -1,6 +1,115 @@
 ---
-title: "HW02: "
+title: "HW02: Basics of Data Frames"
 subtitle: "Stat 133, Fall 2017"
 author: "Woo Sik (Lewis) Kim"
 output: github_document
 ---
+Importing the data set in different ways; first, using "read.csv()", then "read_csv()":
+
+Using "read.csv()", and displaying the resulting data frame:
+
+```{r}
+dataset1 <- read.csv(file = "data/nba2017-player-statistics.csv",
+                     header = TRUE,
+                     colClasses = c("Player" = "character",
+                     "character",
+                     factor, "character", "double",
+                     rep("integer", 19)))
+str(dataset1)
+```
+
+Using "read_csv()", and displaying the resulting data frame (I will be using the data set from read_csv() for the remainder of the homework):
+
+```{r}
+require(readr)
+library(dplyr)
+dataset2 <- read_csv('data/nba2017-player-statistics.csv',
+                     col_types =
+                       list(
+                         Player = col_character(),
+                         Team = col_character(),
+                         Position = col_factor(c('C', 'PF','PG','SF','SG')),
+                         Experience = col_character(),
+                         Salary = col_double(),
+                         Rank = col_integer(),
+                         Age = col_integer(),
+                         GP = col_integer(),
+                         GS = col_integer(),
+                         MIN = col_integer(),
+                         FGM = col_integer(),
+                         FGA = col_integer(),
+                         Points3 = col_integer(),
+                         Points3_atts = col_integer(),
+                         Points2 = col_integer(),
+                         Points2_atts = col_integer(),
+                         FTM = col_integer(),
+                         FTA = col_integer(),
+                         OREB = col_integer(),
+                         DREB = col_integer(),
+                         AST = col_integer(),
+                         STL = col_integer(),
+                         BLK = col_integer(),
+                         TO = col_integer()
+                         ))
+str(dataset2)
+```
+
+Changing all instances of "R" (character) to "0" (integer) in the column "Experience":
+
+```{r}
+dataset2[dataset2$Experience == "R", "Experience"] <- 0
+dataset2$Experience <- as.integer(dataset2$Experience)
+```
+
+Computing and adding new columns to dataset2 to calculate EFF:
+
+```{r}
+Missed_FG <- dataset2$FGA - dataset2$FGM
+Missed_FT <- dataset2$FTA - dataset2$FTM
+PTS <- 2*dataset2$Points2 + 3*dataset2$Points3 + dataset2$FTM
+REB <- dataset2$OREB + dataset2$DREB
+MPG <- dataset2$MIN / dataset2$GP
+
+dataset2 <- cbind(dataset2, Missed_FG, Missed_FT, PTS, REB, MPG)
+
+EFF <- (dataset2$PTS + dataset2$REB + dataset2$AST + dataset2$STL + 
+          dataset2$BLK - dataset2$Missed_FG - dataset2$Missed_FT - 
+          dataset2$TO) / dataset2$GP
+
+dataset2 <- cbind(dataset2, EFF)
+
+Efficiency <- dataset2$EFF
+summary(Efficiency)
+hist(Efficiency)
+```
+
+Processing the EFF data to get the top 10 players, and their associated name, team, salary, and EFF values:
+
+```{r}
+desc_eff <- select(dataset2, Player, Team, Salary, EFF)
+head(arrange(desc_eff, desc(dataset2$EFF)), 10)
+```
+
+Obtaining player(s) with a negative EFF value:
+
+```{r}
+neg_eff <- select(dataset2, Player, EFF)
+
+```
+
+> top 10 players in descending EFF order:
+> Player(s) with a negative EFF value:
+
+Calculating the correlation coefficients between EFF and all the variables used in the EFF formula (in order of ):
+
+```{r}
+cor(dataset2$EFF, dataset2$PTS)
+cor(dataset2$EFF, dataset2$REB)
+cor(dataset2$EFF, dataset2$AST)
+cor(dataset2$EFF, dataset2$STL)
+cor(dataset2$EFF, dataset2$BLK)
+cor(dataset2$EFF, dataset2$Missed_FG)
+cor(dataset2$EFF, dataset2$Missed_FT)
+cor(dataset2$EFF, dataset2$TO)
+cor(dataset2$EFF, dataset2$GP)
+```
