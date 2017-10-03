@@ -92,8 +92,8 @@ hist(Efficiency)
 **Processing the EFF data to get the top 10 players, and their associated name, team, salary, and EFF values:**
 
 ```{r}
-desc_eff <- select(dataset2, Player, Team, Salary, EFF)
-head(arrange(desc_eff, desc(dataset2$EFF)), 10)
+topten_eff <- select(dataset2, Player, Team, Salary, EFF)
+head(arrange(topten_eff, desc(dataset2$EFF)), 10)
 ```
 
 **Obtaining player(s) with negative EFF value(s):**

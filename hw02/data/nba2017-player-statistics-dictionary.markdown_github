@@ -1,13 +1,10 @@
----
-title: "HW02: Data Dictionary"
-subtitle: "Stat 133, Fall 2017"
-author: "Woo Sik (Lewis) Kim"
-output: github_document
----
+HW02: Data Dictionary
+================
+Woo Sik (Lewis) Kim
 
 **Source of Data**
 
-http://www.basketball-reference.com
+<http://www.basketball-reference.com>
 
 **Base column names and variables used in nba2017-player-statistics.csv:**
 
@@ -33,11 +30,11 @@ http://www.basketball-reference.com
 
 • Points3: 3-Point Field Goals
 
-• Points3_atts: 3-Point Field Goal Attempts
+• Points3\_atts: 3-Point Field Goal Attempts
 
 • Points2: 2-Point Field Goals
 
-• Points2_atts: 2-Point Field Goal Attempts
+• Points2\_atts: 2-Point Field Goal Attempts
 
 • FTM: Free Throws Made
 
@@ -65,22 +62,22 @@ http://www.basketball-reference.com
 
 • Missed FT: missed free throws, calculated through FTA - FTM
 
-• PTS: total points, calculated through a weighted point total (x2 for 2-pointers, x3 for 3-pointers, x1 for free throws)
+• PTS: total points, calculated through a weighted point total (x2 for 2-pointers, x3 for 3 pointers, x1 for free throws)
 
 • REB: total rebounds: offensive and defensive. Calculated through OREB + DREB
 
 • MPG: Average minutes per game. Calculated through MIN / GP
 
-**Data structures imported and created:**
+**Data frames imported:**
 
 • dataset1: a data frame imported from the data source using "read.csv()"
 
-• dataset2: a data frame imported from the data source using "read_csv()"; also the data frame used for all calculations in the homework.
+• dataset2: a data frame imported from the data source using "read\_csv()"; also the data frame used for all calculations in the homework.
 
-• topten_eff: a data frame created from selecting columns and filtering rows from dataset2 to obtain the top 10 EFF values, and then sorted in descending order.
+• topten\_eff: a data frame created from selecting columns and filtering rows from dataset2 to obtain the top 10 EFF values, and then sorted in descending order.
 
-• neg_eff: a data frame created from selecting columns and filtering rows from dataset2 to obtain all players with EFF < 0.
+• neg\_eff: a data frame created from selecting columns and filtering rows from dataset2 to obtain all players with EFF &lt; 0.
 
-• corr_coeff: a vector containing the correlation coefficients between EFF and PTS, REB, STL, AST, BLK, Missed_FT, Missed_FG, and TO.
+• corr\_coeff: a vector containing the correlation coefficients between EFF and PTS, REB, STL, AST, BLK, Missed\_FT, Missed\_FG, and TO.
 
-• sorted_eff: corr_coeff sorted in descending order.
+• sorted\_eff: corr\_coeff sorted in descending order.
