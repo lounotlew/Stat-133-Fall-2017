@@ -11,9 +11,9 @@ output: github_document
 ```{r}
 dataset1 <- read.csv(file = "data/nba2017-player-statistics.csv",
                      header = TRUE,
-                     colClasses = c("Player" = "character",
+                     colClasses = c("character",
                      "character",
-                     factor, "character", "double",
+                     "factor", "character", "double",
                      rep("integer", 19)))
 str(dataset1)
 ```
@@ -77,8 +77,16 @@ EFF <- (dataset2$PTS + dataset2$REB + dataset2$AST + dataset2$STL +
           dataset2$TO) / dataset2$GP
 
 dataset2 <- cbind(dataset2, EFF)
+```
 
-hist(dataset2$EFF)
+**Computing summary statistics for efficiency values, and creating a histogram:**
+
+```{r}
+# Declaring dataset2$EFF as a new variable "Efficiency" for histogram title(s).
+Efficiency <- dataset2$EFF 
+
+summary(Efficiency)
+hist(Efficiency)
 ```
 
 **Processing the EFF data to get the top 10 players, and their associated name, team, salary, and EFF values:**
@@ -99,7 +107,7 @@ str(neg_eff)
 
 • Player(s) with a negative EFF value: "Patricio Garino: -0.6"
 
-**Calculating the correlation coefficients between EFF and all the variables used in the EFF formula (in order of PTS, REB, STL, AST, BLK, Missed_FT, Missed_FG, TO, GP), and adding them to the vector "corr_coeff":**
+**Calculating the correlation coefficients between EFF and all the variables used in the EFF formula (in order of PTS, REB, STL, AST, BLK, Missed_FT, Missed_FG, TO), and adding them to the vector "corr_coeff":**
 
 ```{r}
 corr_coeff <- c(cor(dataset2$EFF, dataset2$PTS), 
@@ -110,15 +118,19 @@ corr_coeff <- c(cor(dataset2$EFF, dataset2$PTS),
                 -1*cor(dataset2$EFF, dataset2$Missed_FT),
                 -1*cor(dataset2$EFF, dataset2$Missed_FG),
                 -1*cor(dataset2$EFF, dataset2$TO))
-sort(corr_coeff, decreasing = TRUE)
+
+sorted_eff <- sort(corr_coeff, decreasing = TRUE)
 ```
 
 **Creating a barchart with the correlations:**
 
-```{r fig.width = 5}
-barplot(corr_coeff, main = "name", space = c(0, 1), beside=TRUE,
+```{r fig.width = 10, fig.height = 5}
+barplot(sorted_eff, main = "Correlations between Player
+        Stats and EFF", beside=TRUE,
         ylim = c(-1, 1), names = c("PTS", "REB", "STL", "AST", "BLK",
-                                   "Missed_FT", "Missed_FG", "TO"))
+                                   "Missed_FT", "Missed_FG", "TO"),
+        col = c("grey", "grey", "grey","grey", "grey", "red", "red", "red"))
+abline(0, 0)
 ```
 
 **Creating a scatterplot of "Efficiency" vs. "Salary" using the entire NBA data set (dataset2):**
@@ -137,7 +149,7 @@ say about the relationship between these two variables?
 cor(dataset2$EFF, dataset2$Salary)
 ```
 
-• The relationship between efficiency and salary for all players does not seem to be very strong.
+• The relationship between efficiency and salary for all players does not seem to be very strong. There is a positive linear relationship between the two variables (as one increases, the other also increases), but there may not be statistical significance to their correlation. This also has to do with the fact that we're not looking at enough variables, since this correlation only considers efficiency statistic vs. salary.
 
 **Selecting players who have MPG values of more than 20, and creating data frame
 "players2":**
@@ -147,7 +159,7 @@ players2 <- select(filter(dataset2, dataset2$MPG > 20), Player, Salary, EFF)
 str(players2)
 ```
                           
-**Creating a scatterplot between "Efficiency" and "Salary" using the data frame "players2" (players whose MPG values >20):**
+**Creating a scatterplot between "Efficiency" and "Salary" using the data frame "players2" (players whose MPG values > 20):**
 
 ```{r}
 plot(players2$EFF, players2$Salary, xlab = "Efficiency", ylab = "Salary")
@@ -160,10 +172,7 @@ lines(lowess(players2$EFF, players2$Salary), col = "blue")
 cor(players2$EFF, players2$Salary)
 ```
 
-What can you say about the relationship between these two variables for the set of
-“more established players”?
-
-• The relationship between efficiency and salary for "more established players" seem to be 
+• The correlation coefficient between efficiency and salary for the "more established players" seem to be lower than the coefficient for all players by about 22% (0.655 / 0.536), meaning there is a weaker correlation for the "more established players" than among everyone. This may be because there are more rookies, and they contribute more to the EFF statistic simply due to sheer numbers. It also may be that there are other variables we're not considering.
 
 **Comments and Reflections (Answered in Order)**
 

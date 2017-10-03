@@ -9,24 +9,18 @@ Woo Sik (Lewis) Kim
 ``` r
 dataset1 <- read.csv(file = "data/nba2017-player-statistics.csv",
                      header = TRUE,
-                     colClasses = c("Player" = "character",
+                     colClasses = c("character",
                      "character",
-                     factor, "character", "double",
+                     "factor", "character", "double",
                      rep("integer", 19)))
-```
-
-    ## Warning in read.table(file = file, header = header, sep = sep, quote =
-    ## quote, : not all columns named in 'colClasses' exist
-
-``` r
 str(dataset1)
 ```
 
     ## 'data.frame':    441 obs. of  24 variables:
     ##  $ Player      : chr  "Al Horford" "Amir Johnson" "Avery Bradley" "Demetrius Jackson" ...
-    ##  $ Team        : Factor w/ 30 levels "ATL","BOS","BRK",..: 2 2 2 2 2 2 2 2 2 2 ...
+    ##  $ Team        : chr  "BOS" "BOS" "BOS" "BOS" ...
     ##  $ Position    : Factor w/ 5 levels "C","PF","PG",..: 1 2 5 3 4 3 4 5 4 2 ...
-    ##  $ Experience  : Factor w/ 19 levels "1","10","11",..: 18 3 15 19 18 14 13 11 19 15 ...
+    ##  $ Experience  : chr  "9" "11" "6" "R" ...
     ##  $ Salary      : num  26540100 12000000 8269663 1450000 1410598 ...
     ##  $ Rank        : int  4 6 5 15 11 1 3 13 8 10 ...
     ##  $ Age         : int  30 29 26 22 31 27 26 21 20 29 ...
@@ -210,11 +204,25 @@ EFF <- (dataset2$PTS + dataset2$REB + dataset2$AST + dataset2$STL +
           dataset2$TO) / dataset2$GP
 
 dataset2 <- cbind(dataset2, EFF)
-
-hist(dataset2$EFF)
 ```
 
-![](hw02-WooSik_Lewis_-Kim_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-4-1.png)
+**Computing summary statistics for efficiency values, and creating a histogram:**
+
+``` r
+# Declaring dataset2$EFF as a new variable "Efficiency" for histogram title(s).
+Efficiency <- dataset2$EFF 
+
+summary(Efficiency)
+```
+
+    ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+    ##  -0.600   5.452   9.090  10.137  13.247  33.840
+
+``` r
+hist(Efficiency)
+```
+
+![](hw02-WooSik_Lewis_-Kim_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-5-1.png)
 
 **Processing the EFF data to get the top 10 players, and their associated name, team, salary, and EFF values:**
 
@@ -250,7 +258,7 @@ str(neg_eff)
 
 • Player(s) with a negative EFF value: "Patricio Garino: -0.6"
 
-**Calculating the correlation coefficients between EFF and all the variables used in the EFF formula (in order of PTS, REB, STL, AST, BLK, Missed\_FT, Missed\_FG, TO, GP), and adding them to the vector "corr\_coeff":**
+**Calculating the correlation coefficients between EFF and all the variables used in the EFF formula (in order of PTS, REB, STL, AST, BLK, Missed\_FT, Missed\_FG, TO), and adding them to the vector "corr\_coeff":**
 
 ``` r
 corr_coeff <- c(cor(dataset2$EFF, dataset2$PTS), 
@@ -261,21 +269,22 @@ corr_coeff <- c(cor(dataset2$EFF, dataset2$PTS),
                 -1*cor(dataset2$EFF, dataset2$Missed_FT),
                 -1*cor(dataset2$EFF, dataset2$Missed_FG),
                 -1*cor(dataset2$EFF, dataset2$TO))
-sort(corr_coeff, decreasing = TRUE)
-```
 
-    ## [1]  0.8588644  0.7634501  0.6957286  0.6689232  0.5679571 -0.7271456
-    ## [7] -0.7722477 -0.8003289
+sorted_eff <- sort(corr_coeff, decreasing = TRUE)
+```
 
 **Creating a barchart with the correlations:**
 
 ``` r
-barplot(corr_coeff, main = "name", space = c(0, 1), beside=TRUE,
+barplot(sorted_eff, main = "Correlations between Player
+        Stats and EFF", beside=TRUE,
         ylim = c(-1, 1), names = c("PTS", "REB", "STL", "AST", "BLK",
-                                   "Missed_FT", "Missed_FG", "TO"))
+                                   "Missed_FT", "Missed_FG", "TO"),
+        col = c("grey", "grey", "grey","grey", "grey", "red", "red", "red"))
+abline(0, 0)
 ```
 
-![](hw02-WooSik_Lewis_-Kim_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-8-1.png)
+![](hw02-WooSik_Lewis_-Kim_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-9-1.png)
 
 **Creating a scatterplot of "Efficiency" vs. "Salary" using the entire NBA data set (dataset2):**
 
@@ -284,7 +293,7 @@ plot(dataset2$EFF, dataset2$Salary, xlab = "Efficiency", ylab = "Salary")
 lines(lowess(dataset2$EFF, dataset2$Salary), col = "blue")
 ```
 
-![](hw02-WooSik_Lewis_-Kim_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-9-1.png)
+![](hw02-WooSik_Lewis_-Kim_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-10-1.png)
 
 Also, compute the linear correlation coefficient between them. What can you say about the relationship between these two variables?
 
@@ -296,7 +305,7 @@ cor(dataset2$EFF, dataset2$Salary)
 
     ## [1] 0.655624
 
-• The relationship between efficiency and salary for all players seem to be .
+• The relationship between efficiency and salary for all players does not seem to be very strong. There is a positive linear relationship between the two variables (as one increases, the other also increases), but there may not be statistical significance to their correlation. This also has to do with the fact that we're not looking at enough variables, since this correlation only considers efficiency statistic vs. salary.
 
 **Selecting players who have MPG values of more than 20, and creating data frame "players2":**
 
@@ -310,14 +319,14 @@ str(players2)
     ##  $ Salary: num  26540100 12000000 8269663 6587132 6286408 ...
     ##  $ EFF   : num  19.5 10.9 16.3 24.7 16.1 ...
 
-**Creating a scatterplot between "Efficiency" and "Salary" using the data frame "players2" (players whose MPG values &gt;20):**
+**Creating a scatterplot between "Efficiency" and "Salary" using the data frame "players2" (players whose MPG values &gt; 20):**
 
 ``` r
 plot(players2$EFF, players2$Salary, xlab = "Efficiency", ylab = "Salary")
 lines(lowess(players2$EFF, players2$Salary), col = "blue")
 ```
 
-![](hw02-WooSik_Lewis_-Kim_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-12-1.png)
+![](hw02-WooSik_Lewis_-Kim_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-13-1.png)
 
 **Computing the linear correlation coefficient between "Efficiency" and "Salary" for players whose MPG values &gt; 20:**
 
@@ -327,9 +336,7 @@ cor(players2$EFF, players2$Salary)
 
     ## [1] 0.5367224
 
-What can you say about the relationship between these two variables for the set of “more established players”?
-
-• The relationship between efficiency and salary for "more established players" seem to be
+• The correlation coefficient between efficiency and salary for the "more established players" seem to be lower than the coefficient for all players by about 22% (0.655 / 0.536), meaning there is a weaker correlation for the "more established players" than among everyone. This may be because there are more rookies, and they contribute more to the EFF statistic simply due to sheer numbers. It also may be that there are other variables we're not considering.
 
 **Comments and Reflections (Answered in Order)**
 
