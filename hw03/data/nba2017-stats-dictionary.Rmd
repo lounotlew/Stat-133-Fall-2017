@@ -1,0 +1,51 @@
+---
+title: "NBA Statistics Dictionary"
+subtitle: Stat 133 - Fall 2017
+author: Woo Sik (Lewis) Kim
+output: github_document
+---
+**NBA Statistics Variables and their Descriptions:**
+  
+• Player: a player's name (type 'char')
+
+• games_played: a player's # of games played (type 'char')
+
+• minutes: a player's total # of minutes played (type 'int')
+
+• field_goals_made: a player's # of field goals made (type 'int')
+
+• fieal_goals_atts: a player's # of field goal attempts (type 'int')
+
+• field_goals_perc: a player's percent of field goals made (success rate) (type 'numeric')
+
+• points2_made: a player's # of 2-pointers made (type 'int')
+
+• points2_atts: a player's # of 2-pointers attempts (type 'int')
+
+• points2_perc: a player's percent of 2-pointers made (success rate) (type 'numeric')
+
+• points3_made: a player's # of 3-pointers made (type 'int')
+
+• points3_atts: a player's # of 3-pointers attempts (type 'int')
+
+• points3_perc: a player's percent of 3-pointers made (success rate) (type 'numeric')
+
+• points1_made: a player's # of 1-pointers made (type 'int')
+
+• points1_atts: a player's # of 1-pointers attempts (type 'int')
+
+• points1_perc: a player's percent of 1-pointers made (success rate) (type 'numeric')
+
+• off_rebounds: a player's # of offensive rebounds (type 'int')
+
+• def_revounds: a player's # of defensive rebounds (type 'int')
+
+• assists: a player's # of assists (type 'int')
+
+• steals: a player's # of steals (type 'int')
+
+• blocks: a player's # of blocks (type 'int')
+
+• turnovers: a player's # of turnovers (type 'int')
+
+• fouls: a player's # of fouls (type 'int')
