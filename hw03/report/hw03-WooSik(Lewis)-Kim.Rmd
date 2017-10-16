@@ -43,7 +43,7 @@ eff_plot <- eff_plot + geom_hline(yintercept = mean(teams$efficiency),color = "r
 eff_plot
 ```
 
-**Performing a "Principal Components Analysis" (PCA) on the following variables (refer to data dictionary for definitions): points3, points2, free_throws, off_rebounds, assists, steals, blocks, turnovers, fouls.**
+**Performing a "Principal Components Analysis" (PCA) on the following variables (refer to data dictionary in ../data for definitions): points3, points2, free_throws, off_rebounds, assists, steals, blocks, turnovers, fouls.**
   
 ```{r}
 pca_teams <- select(teams, points3, points2, free_throws, off_rebounds, def_rebounds, assists, steals, blocks, turnovers, fouls)
@@ -52,7 +52,7 @@ pca_teams <- prcomp(pca_teams, scale.=TRUE)
 pca_teams
 ```
 
-**Creating a data frame with the eigenvales from PCA:**
+**Creating a data frame with the eigenvalues from PCA:**
   
 ```{r}
 eigenvalues = pca_teams$sdev^2
