@@ -1,0 +1,6 @@
+---
+title: "Post 02: "
+subtitle: "Stat 133, Fall 2017"
+author: "Woo Sik (Lewis) Kim"
+output: html_document
+---

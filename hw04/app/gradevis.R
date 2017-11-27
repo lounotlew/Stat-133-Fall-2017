@@ -135,7 +135,7 @@ server <- function(input, output) {
   scat_plot %>% bind_shiny("scatter")
   
   # Printing the correlation coefficient:
-  output$corr <- renderPrint({
+  output$corr <- renderText({
     col1name <- input$xvars2
     col1 = dataset[[col1name]]
     
