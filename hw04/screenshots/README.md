@@ -1,0 +1,1 @@
+Screenshots of the Shiny app (in case there are any issues with it running).
